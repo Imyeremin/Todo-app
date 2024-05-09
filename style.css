@@ -53,6 +53,8 @@ h1, h2{
 
 .todo-item{
     display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 500px;
     min-height: 50px;
     border: 1px solid black;
@@ -92,6 +94,8 @@ h1, h2{
 }
 
 .buttons button{
+    display: flex;
+    align-items: center;
     outline: none;
     border: none;
     background-color: orange;
