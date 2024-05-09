@@ -8,34 +8,42 @@ var tasks;
 
 var todoItemElems = [];
 
-function Task(description){ 
-   this.description = description;
+function Task(description){
+    this.description = description;
     this.complited = false;
 }
 const createTemplate = (task, index) => {
-      return `
+    return `
     <div class="todo-item ${task.complited ? 'checked' : ''}">
     <div class="description">${task.description} </div>
     <div class="buttons">
       <input onclick="completeTask(${index});" type="checkbox" class="btn-complete" ${task.complited ? 'checked' : ''}> 
-      <button class="btn-delete">Delete</button>
+      <button onclick="deleteTask(${index});" class="btn-delete">Delete</button>
     </div>
   </div>
     `
+}
+
+const filterTasks = () =>{ 
+    const ActiveTasks = tasks.length && tasks.filter(item => item.complited == false);
+     const ComplitedTasks = tasks.length && tasks.filter(item => item.complited == true);
+    tasks = [...ActiveTasks,...ComplitedTasks]
    }
 
 const fillHtmlList = () => { 
-    todosWrapper.innerHTML = '';
-    if(tasks.length > 0){  tasks.forEach((item, index) => {
+     todosWrapper.innerHTML = '';
+    if(tasks.length > 0){ 
+        filterTasks();
+        tasks.forEach((item, index) => {
             todosWrapper.innerHTML += createTemplate(item, index); 
-               });
+            });
       todoItemElems = document.querySelectorAll(".todo-item")
     }
 }
-fillHtmlList();  
+fillHtmlList(); 
 
 const updateLocal = () => {
-    localStorage.setItem('tasks', JSON.stringify(tasks) )
+     localStorage.setItem('tasks', JSON.stringify(tasks) )
    }
 
 const completeTask = (index) => {
@@ -51,11 +59,18 @@ const completeTask = (index) => {
 }
 
 addTaskBtn.addEventListener('click',() => {
-      tasks.push(new Task(deskTaskInput.value));
-     updateLocal();
-   fillHtmlList();
-      deskTaskInput.value = '';
-   })
+     tasks.push(new Task(deskTaskInput.value));
+      updateLocal();
+     fillHtmlList();
+     deskTaskInput.value = '';
+   });
 
-
+const deleteTask = index => {
+    todoItemElems[index].classList.add('delition')
+     setTimeout(() => {
+    tasks.splice(index, 1);
+    updateLocal(); 
+    fillHtmlList();
+ } , 500);  
+}
 
